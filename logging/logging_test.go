@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/afiskon/promtail-client/promtail"
-
 	"github.com/codepumper/go-grafana-stack-helpers/logging"
 )
 
@@ -24,7 +23,7 @@ func TestInitLogger_Success(t *testing.T) {
 	}
 
 	// Call the function
-	err := logger.InitLogger(format, labels, config)
+	err := logging.InitLogger(format, labels, config)
 
 	// Check the result
 	if err != nil {
@@ -46,7 +45,7 @@ func TestInitLogger_InvalidFormat(t *testing.T) {
 	}
 
 	// Call the function
-	err := logger.InitLogger(format, labels, config)
+	err := logging.InitLogger(format, labels, config)
 
 	// Check the result
 	if err == nil {
@@ -73,7 +72,7 @@ func TestNewLogger_Success(t *testing.T) {
 	}
 
 	// Call the function
-	loggerInstance, err := logger.NewLogger(format, labels, config)
+	loggerInstance, err := logging.NewLogger(format, labels, config)
 
 	// Check the result
 	if err != nil {
@@ -91,7 +90,7 @@ func TestNewLogger_DefaultConfig(t *testing.T) {
 	labels := "test_labels"
 
 	// Call the function without providing the config
-	loggerInstance, err := logger.NewLogger(format, labels, nil)
+	loggerInstance, err := logging.NewLogger(format, labels, nil)
 
 	// Check the result
 	if err != nil {
@@ -117,10 +116,10 @@ func TestDebugf(t *testing.T) {
 		SendLevel:          promtail.INFO,
 		PrintLevel:         promtail.ERROR,
 	}
-	_ = logger.InitLogger(format, labels, config)
+	_ = logging.InitLogger(format, labels, config)
 
 	// Call the function
-	logger.Debugf("Test debug message")
+	logging.Debugf("Test debug message")
 
 	// TODO: Add assertions or checks based on your logging implementation
 }
@@ -137,10 +136,10 @@ func TestInfof(t *testing.T) {
 		SendLevel:          promtail.INFO,
 		PrintLevel:         promtail.ERROR,
 	}
-	_ = logger.InitLogger(format, labels, config)
+	_ = logging.InitLogger(format, labels, config)
 
 	// Call the function
-	logger.Infof("Test info message")
+	logging.Infof("Test info message")
 
 	// TODO: Add assertions or checks based on your logging implementation
 }
@@ -157,10 +156,10 @@ func TestWarnf(t *testing.T) {
 		SendLevel:          promtail.INFO,
 		PrintLevel:         promtail.ERROR,
 	}
-	_ = logger.InitLogger(format, labels, config)
+	_ = logging.InitLogger(format, labels, config)
 
 	// Call the function
-	logger.Warnf("Test warning message")
+	logging.Warnf("Test warning message")
 
 	// TODO: Add assertions or checks based on your logging implementation
 }
@@ -177,10 +176,10 @@ func TestErrorf(t *testing.T) {
 		SendLevel:          promtail.INFO,
 		PrintLevel:         promtail.ERROR,
 	}
-	_ = logger.InitLogger(format, labels, config)
+	_ = logging.InitLogger(format, labels, config)
 
 	// Call the function
-	logger.Errorf("Test error message")
+	logging.Errorf("Test error message")
 
 	// TODO: Add assertions or checks based on your logging implementation
 }
@@ -197,10 +196,10 @@ func TestShutdown(t *testing.T) {
 		SendLevel:          promtail.INFO,
 		PrintLevel:         promtail.ERROR,
 	}
-	_ = logger.InitLogger(format, labels, config)
+	_ = logging.InitLogger(format, labels, config)
 
 	// Call the function
-	logger.Shutdown()
+	logging.Shutdown()
 
 	// TODO: Add assertions or checks based on your logging implementation
 }

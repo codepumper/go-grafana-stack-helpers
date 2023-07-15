@@ -2,6 +2,8 @@ module github.com/codepumper/go-grafana-stack-helpers/logging
 
 go 1.20
 
+require github.com/afiskon/promtail-client v0.0.0-20190305142237-506f3f921e9c
+
 require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
