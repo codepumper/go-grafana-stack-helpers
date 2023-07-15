@@ -3,6 +3,9 @@ receivers:
     protocols:
       http:
     use_incoming_timestamp: true
+  otlp:
+    protocols:
+      grpc:
 
 processors:
   attributes:
@@ -16,6 +19,11 @@ processors:
 exporters:
   loki:
     endpoint: http://loki:3100/loki/api/v1/push
+  otlp:
+    endpoint: tempo:4317
+    tls:
+      insecure: true
+      #authorization: Basic <Base64 version of your username:api-key>
 
 service:
   pipelines:
@@ -23,3 +31,7 @@ service:
       receivers: [loki]
       processors: [attributes]
       exporters: [loki]
+    traces:
+      receivers: [otlp]
+      exporters: [otlp]
+

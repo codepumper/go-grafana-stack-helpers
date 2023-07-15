@@ -4,10 +4,14 @@ Grafana Stack Go Utils is a collection of reusable components and utilities in G
 
 ## Features
 
-- Docker Compose and configuration files for setting up the Grafana stack
-- Logging package for easy integration with Prometheus, Opentelemetry and Grafana Loki
+- Docker-compose and configuration files for setting up the Grafana stack
 - Tracing client for distributed tracing using Grafana Tempo or other tracing backends
 - Metrics client for collecting and reporting application-specific metrics to Prometheus or other metrics systems
+- Logging package for easy integration with Prometheus, Opentelemetry and Grafana Loki
+
+## Tracing
+
+## Metrics
 
 ## Logging
 

@@ -20,3 +20,15 @@
 # Go workspace file
 go.work
 .vscode/launch.json
+grafana/tempo-data/blocks/tempo_cluster_seed.json
+grafana/tempo-data/blocks/single-tenant/index.json.gz
+.gitignore
+grafana/tempo-data/blocks/single-tenant/3a185148-05b8-471b-b00d-1612427dd9e7/bloom-0
+grafana/tempo-data/blocks/single-tenant/3a185148-05b8-471b-b00d-1612427dd9e7/data.parquet
+.gitignore
+grafana/tempo-data/generator/wal/single-tenant/lock
+.gitignore
+grafana/tempo-data/blocks/single-tenant/3a185148-05b8-471b-b00d-1612427dd9e7/meta.json
+.gitignore
+grafana/tempo-data/wal/bd06c86a-0e06-43c9-9b6d-b9f9cf29a38c+single-tenant+vParquet2/0000000001
+grafana/tempo-data/generator/wal/single-tenant/wal/00000000

@@ -5,6 +5,20 @@ networks:
 
 
 services:
+  tempo:
+    image: grafana/tempo:latest
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    volumes:
+      - ./tempo-config.yaml:/etc/tempo.yaml
+      - ./tempo-data:/tmp/tempo
+    ports:
+      - "14268" # jaeger ingest
+      - "3200" # tempo
+      - "4317" # otlp grpc
+      - "4318" # otlp http
+      - "9411" # zipkin
+    networks:
+      - loki
   loki:
     image: grafana/loki:latest
     ports:
@@ -19,24 +33,13 @@ services:
       - "GF_AUTH_DISABLE_LOGIN_FORM=true"
       - "GF_AUTH_ANONYMOUS_ENABLED=true"
       - "GF_AUTH_ANONYMOUS_ORG_ROLE=Admin"
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-          - name: Loki
-            type: loki
-            access: proxy
-            url: http://loki:3100
-        EOF
-        /run.sh
+    volumes:
+      - ./grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
     ports:
       - "3000:3000"
     depends_on:
       - loki
+      - tempo
     networks:
       - loki
 
@@ -49,9 +52,95 @@ services:
     networks:
       - loki
 
+  load-balancer:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - "mimir-1"
+      - "mimir-2"
+      - "mimir-3"
+    ports:
+      - 9009:9009
+    networks:
+      - loki
+
+  mimir-1:
+    image: grafana/mimir:latest
+    command: [ "-config.file=/etc/mimir-config.yaml" ]
+    hostname: mimir-1
+    depends_on:
+      - minio
+    volumes:
+      - ./mimir-config.yaml:/etc/mimir-config.yaml
+      - ./alertmanager-fallback-config.yaml:/etc/alertmanager-fallback-config.yaml
+      - mimir-1-data:/data
+    networks:
+      - loki
+
+  mimir-2:
+    image: grafana/mimir:latest
+    command: [ "-config.file=/etc/mimir-config.yaml" ]
+    hostname: mimir-2
+    depends_on:
+      - minio
+    volumes:
+      - ./mimir-config.yaml:/etc/mimir-config.yaml
+      - ./alertmanager-fallback-config.yaml:/etc/alertmanager-fallback-config.yaml
+      - mimir-2-data:/data
+    networks:
+      - loki
+
+  mimir-3:
+    image: grafana/mimir:latest
+    command: [ "-config.file=/etc/mimir-config.yaml" ]
+    hostname: mimir-3
+    depends_on:
+      - minio
+    volumes:
+      - ./mimir-config.yaml:/etc/mimir-config.yaml
+      - ./alertmanager-fallback-config.yaml:/etc/alertmanager-fallback-config.yaml
+      - mimir-3-data:/data
+    networks:
+      - loki
+
+  minio:
+    image: minio/minio
+    entrypoint: [ "" ]
+    command:
+      [
+        "sh",
+        "-c",
+        "mkdir -p /data/mimir && minio server --quiet /data"
+      ]
+    environment:
+      - MINIO_ROOT_USER=mimir
+      - MINIO_ROOT_PASSWORD=supersecret
+    volumes:
+      - minio-data:/data
+    networks:
+      - loki
+
   flog:
     image: mingrammer/flog
     command: -f json -d 1s -l
+    networks:
+      - loki
+
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - --config.file=/etc/prometheus-config.yaml
+      - --web.enable-remote-write-receiver
+      - --enable-feature=exemplar-storage
+    volumes:
+      - ./prometheus-config.yaml:/etc/prometheus-config.yaml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - "mimir-1"
+      - "mimir-2"
+      - "mimir-3"
     networks:
       - loki
 
@@ -67,5 +156,13 @@ services:
       - ./otelcol-config.yaml:/etc/otelcol-config.yaml
     ports:
       - "3500:3500" # loki receiver HTTP
+      - "4317:4317" # OTLP gRPC receiver
+      - "4318:4318" # OTLP http receiver
     networks:
       - loki
+
+volumes:
+  mimir-1-data:
+  mimir-2-data:
+  mimir-3-data:
+  minio-data:
