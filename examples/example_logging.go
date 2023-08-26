@@ -1,11 +1,11 @@
-package main
+package example_logging
 
 import (
 	"fmt"
 	"os"
 	"path/filepath"
 
-	"logging"
+	"github.com/codepumper/go-grafana-stack-helpers/logging"
 )
 
 func init() {
