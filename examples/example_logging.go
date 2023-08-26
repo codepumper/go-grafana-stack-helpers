@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/codepumper/go-grafana-stack-helpers/logging"
+	"logging"
 )
 
 func init() {

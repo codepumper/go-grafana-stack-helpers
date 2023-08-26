@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/afiskon/promtail-client/promtail"
-	"github.com/codepumper/go-grafana-stack-helpers/logging"
+	"logging"
 )
 
 func TestInitLogger_Success(t *testing.T) {
