@@ -1,3 +1,3 @@
 module github.com/codepumper/go-grafana-stack-helpers/example
 
-go 1.20
+go 1.21

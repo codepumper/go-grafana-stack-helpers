@@ -1,6 +1,6 @@
 module metrics
 
-go 1.20
+go 1.21
 
 require go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.16.0
 
