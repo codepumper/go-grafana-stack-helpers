@@ -1,4 +1,4 @@
-module github.com/codepumper/go-grafana-stack-helpers/logging
+module logging
 
 go 1.21
 
